@@ -1,5 +1,47 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title></html>
+</head>
+<body>
+<header class="header" th:fragment="header">
+    <div class="container navbar">
+        <a class="logo" th:href="@{/}">
+            <div class="logo-icon"><i class="fa-solid fa-leaf"></i></div>
+            <div class="logo-text">
+                <h3>HOME DECOR</h3>
+                <span>STORE</span>
+            </div>
+        </a>
+
+        <nav>
+            <ul>
+                <li><a th:href="@{/}">Trang chủ</a></li>
+                <li><a href="#">Sản phẩm</a></li>
+                <li><a href="#">Danh mục</a></li>
+                <li><a href="#">Liên hệ</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-icons" style="display: flex; align-items: center; gap: 20px;">
+            <i class="fa-solid fa-magnifying-glass" style="cursor: pointer;"></i>
+
+            <div th:if="${#authentication != null and #authentication.name != 'anonymousUser'}">
+                <a th:href="@{/profile}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-regular fa-user"></i>
+
+                </a>
+            </div>
+
+            <div th:if="${#authentication == null or #authentication.name == 'anonymousUser'}">
+                <a th:href="@{/login}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-regular fa-user"></i> <span></span>
+                </a>
+            </div>
+
+            <i class="fa-solid fa-cart-shopping" style="cursor: pointer;"></i>
+        </div>
+    </div>
+</header>
+</body>
+</html>

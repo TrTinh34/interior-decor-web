@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang chủ - Home Decor Store</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+</head>
+<body>
+
+<div th:replace="~{/fragments/header :: header}"></div>
+
+<main style="flex: 1;">
+
+    <section class="hero-section">
+        <img src="https://images.unsplash.com/photo-1724582586529-62622e50c0b3?w=1600&h=900&fit=crop&auto=format" alt="Modern living room interior" class="hero-bg">
+        <div class="hero-overlay"></div>
+        <div class="container hero-content">
+            <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 3px; margin-bottom: 12px; opacity: 0.8;">Bộ sưu tập mới 2024</p>
+            <h1 class="hero-title">Biến không gian sống thành tác phẩm nghệ thuật</h1>
+            <p style="font-size: 15px; max-width: 440px; line-height: 1.7; margin-bottom: 32px; opacity: 0.85; font-weight: 300;">
+                Khám phá bộ sưu tập đồ trang trí nội thất được tuyển chọn kỹ lưỡng theo phong cách Bắc Âu hiện đại.
+            </p>
+            <div class="hero-btn-group">
+                <a th:href="@{/products}" class="btn-primary-custom">
+                    Khám phá ngay <i class="fa-solid fa-arrow-right"></i>
+                </a>
+                <a th:href="@{/categories}" class="btn-outline-white">Xem danh mục</a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container section-padding">
+        <div class="section-header">
+            <div>
+                <p class="section-subtitle">Khám phá theo</p>
+                <h2 class="section-title">Danh mục nổi bật</h2>
+            </div>
+            <a th:href="@{/categories}" class="view-all-link">
+                Xem tất cả <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i>
+            </a>
+        </div>
+
+        <div class="category-grid">
+            <div th:each="cat : ${categories}" class="category-card" th:onclick="|window.location.href='@{/products(category=${cat.id})}'|">
+                <img th:src="${cat.imageUrl}" th:alt="${cat.name}">
+                <div class="category-overlay"></div>
+                <p class="category-name" th:text="${cat.name}">Tên danh mục</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding" style="background: #ffffff; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border);">
+        <div class="container">
+            <div class="section-header">
+                <div>
+                    <p class="section-subtitle">Được yêu thích</p>
+                    <h2 class="section-title">Sản phẩm nổi bật</h2>
+                </div>
+                <a th:href="@{/products}" class="view-all-link">
+                    Xem tất cả <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i>
+                </a>
+            </div>
+
+            <div class="products-grid">
+                <div th:each="product : ${featuredProducts}" class="product-item">
+                    <div class="product-img-wrap">
+                        <a th:href="@{/product/detail/{id}(id=${product.id})}">
+                            <img th:src="${product.imageUrl}" th:alt="${product.name}">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-cat" th:text="${product.category != null ? product.category.name : 'Chưa phân loại'}">Danh mục</p>
+                        <h3 class="product-name" th:text="${product.name}">Tên sản phẩm Decor</h3>
+                        <div class="product-meta">
+                            <span class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
+                            <button class="btn-add-cart" title="Thêm vào giỏ hàng">
+                                <i class="fa-solid fa-basket-shopping"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="container section-padding">
+        <div class="story-grid">
+            <div class="story-images">
+                <div class="story-img-main">
+                    <img src="https://images.unsplash.com/photo-1705326701287-346fc37a2c86?w=800&h=1000&fit=crop&auto=format" alt="Interior design showcase">
+                </div>
+                <div class="story-img-sub">
+                    <img src="https://images.unsplash.com/photo-1758789898279-82f8cc279444?w=300&h=300&fit=crop&auto=format" alt="Decorative vase">
+                </div>
+            </div>
+            <div>
+                <p class="section-subtitle">Về chúng tôi</p>
+                <h2 class="section-title" style="line-height: 1.3; margin-bottom: 24px; font-size: 36px;">Nghệ thuật trong từng<br>chi tiết nhỏ</h2>
+                <p style="font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 16px;">
+                    Home Decor Store ra đời từ tình yêu với không gian sống đẹp và sự tôn trọng vật liệu tự nhiên. Mỗi sản phẩm chúng tôi mang đến đều được chọn lọc từ các nghệ nhân và thương hiệu uy tín trong và ngoài nước.
+                </p>
+                <p style="font-size: 14px; color: var(--muted); line-height: 1.7; margin-bottom: 32px;">
+                    Chúng tôi tin rằng môi trường sống ảnh hưởng sâu sắc đến tinh thần và cảm xúc. Vì vậy, mỗi món đồ trang trí không chỉ là vật dụng — mà còn là câu chuyện, là cảm xúc bạn muốn kể trong ngôi nhà của mình.
+                </p>
+
+                <div class="story-stats">
+                    <div>
+                        <p class="stat-number">2,500+</p>
+                        <p class="stat-label">Sản phẩm</p>
+                    </div>
+                    <div>
+                        <p class="stat-number">15,000+</p>
+                        <p class="stat-label">Khách hàng</p>
+                    </div>
+                    <div>
+                        <p class="stat-number">8+</p>
+                        <p class="stat-label">Năm kinh nghiệm</p>
+                    </div>
+                </div>
+
+                <a th:href="@{/products}" class="btn-primary-custom" style="margin-top: 8px;">
+                    Khám phá bộ sưu tập <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="section-padding" style="background: rgba(224, 217, 206, 0.25);">
+        <div class="container">
+            <div style="text-align: center; margin-bottom: 40px;">
+                <p class="section-subtitle">Khám phá thêm</p>
+                <h2 class="section-title">Tất cả sản phẩm</h2>
+            </div>
+
+            <div class="products-grid">
+                <div th:each="product : ${allProducts}" class="product-item">
+                    <div class="product-img-wrap">
+                        <a th:href="@{/product/detail/{id}(id=${product.id})}">
+                            <img th:src="${product.imageUrl}" th:alt="${product.name}">
+                        </a>
+                    </div>
+                    <div class="product-info">
+                        <p class="product-cat" th:text="${product.category != null ? product.category.name : 'Chưa phân loại'}">Danh mục</p>
+                        <h3 class="product-name" th:text="${product.name}">Sản phẩm nội thất</h3>
+                        <div class="product-meta">
+                            <span class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
+                            <button class="btn-add-cart"><i class="fa-solid fa-basket-shopping"></i></button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="text-align: center; margin-top: 48px;">
+                <a th:href="@{/products}" class="btn-outline-custom">
+                    Xem tất cả sản phẩm <i class="fa-solid fa-arrow-right"></i>
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <section class="container section-padding">
+        <div style="text-align: center; margin-bottom: 48px;">
+            <p class="section-subtitle">Cam kết của chúng tôi</p>
+            <h2 class="section-title">Tại sao chọn Home Decor?</h2>
+        </div>
+
+        <div class="commit-grid">
+            <div class="commit-item" style="text-align: center;">
+                <div class="commit-icon-box">
+                    <i class="fa-solid fa-truck-fast"></i>
+                </div>
+                <h3 style="font-size: 14px; font-weight: 600; color: var(--charcoal); margin-bottom: 8px;">Giao hàng miễn phí</h3>
+                <p style="font-size: 12px; color: var(--muted); line-height: 1.6;">Miễn phí vận chuyển cho đơn hàng từ 500.000đ trên toàn quốc</p>
+            </div>
+            <div class="commit-item" style="text-align: center;">
+                <div class="commit-icon-box">
+                    <i class="fa-solid fa-shield-halved"></i>
+                </div>
+                <h3 style="font-size: 14px; font-weight: 600; color: var(--charcoal); margin-bottom: 8px;">Bảo hành chính hãng</h3>
+                <p style="font-size: 12px; color: var(--muted); line-height: 1.6;">Tất cả sản phẩm đều có bảo hành và cam kết chất lượng</p>
+            </div>
+            <div class="commit-item" style="text-align: center;">
+                <div class="commit-icon-box">
+                    <i class="fa-solid fa-arrow-rotate-left"></i>
+                </div>
+                <h3 style="font-size: 14px; font-weight: 600; color: var(--charcoal); margin-bottom: 8px;">Đổi trả dễ dàng</h3>
+                <p style="font-size: 12px; color: var(--muted); line-height: 1.6;">Hoàn tiền hoặc đổi hàng trong 30 ngày nếu không hài lòng</p>
+            </div>
+            <div class="commit-item" style="text-align: center;">
+                <div class="commit-icon-box">
+                    <i class="fa-solid fa-headset"></i>
+                </div>
+                <h3 style="font-size: 14px; font-weight: 600; color: var(--charcoal); margin-bottom: 8px;">Hỗ trợ 24/7</h3>
+                <p style="font-size: 12px; color: var(--muted); line-height: 1.6;">Đội ngũ tư vấn viên luôn sẵn sàng hỗ trợ bạn mọi lúc</p>
+            </div>
+        </div>
+    </section>
+
+    <section class="container" style="margin-bottom: 60px;">
+        <div class="cta-section">
+            <img src="https://images.unsplash.com/photo-1646987916641-1f3c8992daa2?w=1400&h=400&fit=crop&auto=format" alt="" class="cta-bg">
+            <div class="cta-content">
+                <p style="font-size: 11px; text-transform: uppercase; letter-spacing: 2px; color: rgba(255,255,255,0.7); margin-bottom: 12px;">Ưu đãi đặc biệt</p>
+                <h2 style="font-family: 'Cormorant Garamond', serif; font-size: 36px; font-weight: 400; margin-bottom: 16px;">Đăng ký nhận ưu đãi độc quyền</h2>
+                <p style="font-size: 13.5px; color: rgba(255,255,255,0.7); line-height: 1.6;">
+                    Nhận ngay voucher giảm 15% cho đơn hàng đầu tiên và cập nhật bộ sưu tập mới nhất.
+                </p>
+                <form class="cta-form" th:action="@{/subscribe}" method="POST">
+                    <input type="email" name="email" placeholder="Nhập email của bạn..." class="cta-input" required>
+                    <button type="submit" class="cta-btn">Đăng ký ngay</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+</main>
+
+<div th:replace="~{/fragments/footer :: footer}"></div>
+
+</body>
+</html>

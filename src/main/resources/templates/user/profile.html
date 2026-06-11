@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tài khoản của tôi</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" th:href="@{/css/app.css}">
+
+</head>
+<body>
+<header class="header" th:fragment="header">
+    <div class="container navbar">
+        <a class="logo" th:href="@{/}">
+            <div class="logo-icon"><i class="fa-solid fa-leaf"></i></div>
+            <div class="logo-text">
+                <h3>HOME DECOR</h3>
+                <span>STORE</span>
+            </div>
+        </a>
+
+        <nav>
+            <ul>
+                <li><a th:href="@{/}">Trang chủ</a></li>
+                <li><a href="#">Sản phẩm</a></li>
+                <li><a href="#">Danh mục</a></li>
+                <li><a href="#">Liên hệ</a></li>
+            </ul>
+        </nav>
+
+        <div class="nav-icons" style="display: flex; align-items: center; gap: 20px;">
+            <i class="fa-solid fa-magnifying-glass" style="cursor: pointer;"></i>
+
+            <div th:if="${#authentication != null and #authentication.name != 'anonymousUser'}">
+                <a th:href="@{/profile}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-regular fa-user"></i>
+
+                </a>
+            </div>
+
+            <div th:if="${#authentication == null or #authentication.name == 'anonymousUser'}">
+                <a th:href="@{/login}" style="text-decoration: none; color: inherit; display: flex; align-items: center; gap: 8px;">
+                    <i class="fa-regular fa-user"></i> <span></span>
+                </a>
+            </div>
+
+            <i class="fa-solid fa-cart-shopping" style="cursor: pointer;"></i>
+        </div>
+    </div>
+</header>
+<main class="profile-container">
+    <div class="profile-wrapper">
+
+        <div class="breadcrumb">
+            <a th:href="@{/}">Trang chủ</a>
+            <span>/</span>
+            <span class="active">Tài khoản của tôi</span>
+        </div>
+
+        <div class="page-title-section">
+            <h1 class="page-title">Tài khoản của tôi</h1>
+            <p class="page-subtitle">
+                Xin chào, <strong th:text="${currentUser?.fullName} ?: 'Khách hàng'">Khách hàng</strong>.
+                Quản lý thông tin và đơn hàng của bạn tại đây.
+            </p>
+        </div>
+
+        <div class="profile-layout">
+
+            <aside class="profile-sidebar">
+                <nav class="sidebar-menu">
+                    <button class="menu-item active" data-tab="info">
+                        <i class="fa-regular fa-user"></i>
+                        <div class="menu-text">
+                            <span class="title">Thông tin cá nhân</span>
+                            <span class="desc">Quản lý tài khoản cá nhân</span>
+                        </div>
+                    </button>
+
+                    <button class="menu-item" data-tab="orders">
+                        <i class="fa-solid fa-box"></i>
+                        <div class="menu-text">
+                            <span class="title">Lịch sử đơn hàng</span>
+                            <span class="desc">Xem danh sách đơn đã đặt</span>
+                        </div>
+                    </button>
+
+                    <button class="menu-item" data-tab="addresses">
+                        <i class="fa-regular fa-map"></i>
+                        <div class="menu-text">
+                            <span class="title">Sổ địa chỉ</span>
+                            <span class="desc">Quản lý địa chỉ giao hàng</span>
+                        </div>
+                    </button>
+
+                    <button class="menu-item" data-tab="password">
+                        <i class="fa-solid fa-lock"></i>
+                        <div class="menu-text">
+                            <span class="title">Đổi mật khẩu</span>
+                            <span class="desc">Bảo mật tài khoản</span>
+                        </div>
+                    </button>
+
+                    <div class="sidebar-divider"></div>
+
+                    <form th:action="@{/logout}" method="POST" style="width: 100%;">
+                        <button type="submit" class="menu-item logout-btn">
+                            <i class="fa-solid fa-arrow-right-from-bracket"></i>
+                            <div class="menu-text">
+                                <span class="title">Đăng xuất</span>
+                            </div>
+                        </button>
+                    </form>
+                </nav>
+            </aside>
+
+            <div class="profile-content-card">
+
+                <div id="tab-info" class="tab-panel active">
+                    <div class="tab-header">
+                        <h2 class="tab-title">Thông tin cá nhân</h2>
+                        <p class="tab-desc">Cập nhật thông tin chi tiết và hồ sơ mua sắm của bạn.</p>
+                    </div>
+
+                    <div th:if="${successMsg}" class="alert-message alert-success" th:text="${successMsg}"></div>
+                    <div th:if="${errorMsg}" class="alert-message alert-danger" th:text="${errorMsg}"></div>
+
+                    <div class="avatar-section">
+                        <div class="avatar-circle">
+                            <!--
+                                ✅ FIX CHÍNH: Dùng th:with để tạo biến tạm,
+                                kiểm tra null trước khi gọi substring().
+                                Nếu fullName null → hiển thị "?" thay vì crash.
+                            -->
+                            <span th:with="name=${currentUser?.fullName}"
+                                  th:text="${name != null and !#strings.isEmpty(name)} ? ${#strings.substring(name, 0, 1).toUpperCase()} : '?'">
+                                U
+                            </span>
+                            <div class="avatar-overlay">
+                                <i class="fa-solid fa-camera"></i>
+                            </div>
+                        </div>
+                        <div class="avatar-info">
+                            <p class="avatar-name" th:text="${currentUser?.fullName} ?: 'Chưa cập nhật'">Tên tài khoản</p>
+                            <p class="avatar-email" th:text="${currentUser?.email} ?: ''">Email của tôi</p>
+                        </div>
+                    </div>
+
+                    <form class="profile-form" th:action="@{/profile/update}" method="POST">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label class="form-label">Tên tài khoản / Email (Không thể sửa)</label>
+                                <input type="text" class="form-input"
+                                       th:value="${currentUser?.email} ?: ''"
+                                       readonly style="background: #f5f5f5; color: #777;">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Họ và tên</label>
+                                <input type="text" name="fullName" class="form-input"
+                                       th:value="${currentUser?.fullName} ?: ''"
+                                       required placeholder="Nhập họ tên đầy đủ">
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group icon-group">
+                                <label class="form-label">Số điện thoại</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-phone input-icon"></i>
+                                    <input type="tel" name="phone" class="form-input pad-left"
+                                           th:value="${currentUser?.phone} ?: ''"
+                                           placeholder="Nhập số điện thoại">
+                                </div>
+                            </div>
+                            <div class="form-group icon-group">
+                                <label class="form-label">Địa chỉ giao hàng mặc định</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-regular fa-map input-icon"></i>
+                                    <input type="text" name="address" class="form-input pad-left"
+                                           th:value="${currentUser?.address} ?: ''"
+                                           placeholder="Nhập địa chỉ nhà cụ thể">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="form-actions">
+                            <button type="submit" class="btn-submit-olive">Lưu thay đổi</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="tab-orders" class="tab-panel">
+                    <div class="tab-header">
+                        <h2 class="tab-title">Lịch sử đơn hàng</h2>
+                        <p class="tab-desc">Danh sách các đơn hàng bạn đã mua tại hệ thống.</p>
+                    </div>
+
+                    <div class="orders-list">
+                        <div class="no-data-alert" style="text-align: center; padding: 40px; color: #999;">
+                            <i class="fa-solid fa-box-open" style="font-size: 36px; margin-bottom: 12px; opacity: 0.5;"></i>
+                            <p style="font-family: 'Inter', sans-serif; font-size: 14px;">Tính năng đang cập nhật đồng bộ đơn hàng.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-addresses" class="tab-panel">
+                    <div class="tab-header">
+                        <h2 class="tab-title">Sổ địa chỉ</h2>
+                        <p class="tab-desc">Quản lý các địa điểm nhận hàng mặc định của bạn.</p>
+                    </div>
+                    <div class="address-list">
+                        <div class="no-data-alert" style="text-align: center; padding: 40px; color: #999;">
+                            <i class="fa-regular fa-map" style="font-size: 36px; margin-bottom: 12px; opacity: 0.5;"></i>
+                            <p style="font-family: 'Inter', sans-serif; font-size: 14px;">Bạn chưa lưu địa chỉ nào khác.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div id="tab-password" class="tab-panel">
+                    <div class="tab-header">
+                        <h2 class="tab-title">Đổi mật khẩu</h2>
+                        <p class="tab-desc">Để bảo mật tài khoản, vui lòng không chia sẻ mật khẩu cho người khác.</p>
+                    </div>
+
+                    <div th:if="${passwordError}" class="alert-message alert-danger" th:text="${passwordError}"></div>
+                    <div th:if="${passwordSuccess}" class="alert-message alert-success" th:text="${passwordSuccess}"></div>
+
+                    <form class="profile-form" th:action="@{/profile/change-password}" method="POST" style="max-width: 480px;">
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label class="form-label">Mật khẩu hiện tại</label>
+                            <input type="password" name="oldPassword" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 20px;">
+                            <label class="form-label">Mật khẩu mới</label>
+                            <input type="password" name="newPassword" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <div class="form-group" style="margin-bottom: 24px;">
+                            <label class="form-label">Xác nhận mật khẩu mới</label>
+                            <input type="password" name="confirmPassword" class="form-input" placeholder="••••••••" required>
+                        </div>
+                        <button type="submit" class="btn-submit-olive">Cập nhật mật khẩu</button>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+    </div>
+</main>
+<div th:replace="~{/fragments/footer :: footer}"></div>
+<script th:src="@{/js/profile.js}"></script>
+</body>
+</html>

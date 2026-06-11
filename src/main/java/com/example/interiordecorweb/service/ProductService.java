@@ -29,6 +29,11 @@ public class ProductService {
     @Value("${app.upload.dir}")
     private String uploadDir;
 
+    public java.util.List<Product> getAllActiveProductsList() {
+        // Gọi repo để lấy tất cả sản phẩm, bạn có thể custom lại trong Repository nếu cần lọc IsActiveTrue
+        return productRepository.findAll();
+    }
+    
     public Page<Product> getProducts(String keyword, Integer categoryId,
                                      String sortBy, int page) {
         Sort sort = "price_asc".equals(sortBy)

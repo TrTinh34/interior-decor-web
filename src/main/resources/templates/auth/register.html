@@ -9,37 +9,7 @@
 </head>
 <body>
 
-<!-- HEADER -->
-<header class="header">
-    <div class="container navbar">
-
-        <div class="logo">
-            <div class="logo-icon">
-                <i class="fa-solid fa-leaf"></i>
-            </div>
-            <div>
-                <h3>HOME DECOR</h3>
-                <span>STORE</span>
-            </div>
-        </div>
-
-        <nav>
-            <ul>
-                <li><a th:href="@{/}">Trang chủ</a></li>
-                <li><a href="#">Sản phẩm</a></li>
-                <li><a href="#">Danh mục</a></li>
-                <li><a href="#">Liên hệ</a></li>
-            </ul>
-        </nav>
-
-        <div class="nav-icons">
-            <i class="fa-solid fa-magnifying-glass"></i>
-            <i class="fa-regular fa-user"></i>
-            <i class="fa-solid fa-cart-shopping"></i>
-        </div>
-
-    </div>
-</header>
+<div th:replace="~{/fragments/header :: header}"></div>
 
 <!-- REGISTER -->
 <section class="register-section">
@@ -47,8 +17,7 @@
     <div class="register-header">
 
         <div class="register-logo">
-            <i class="fa-solid fa-user-plus"></i>
-        </div>
+            <i class="fa-solid fa-leaf"></i> </div>
 
         <h1>Tạo tài khoản</h1>
         <p>Tham gia Home Decor Store ngay hôm nay</p>
@@ -134,48 +103,7 @@
 
 </section>
 
-<!-- FOOTER -->
-<footer class="footer">
-
-    <div class="container footer-grid">
-
-        <div>
-            <h3>HOME DECOR</h3>
-            <p>
-                Biến không gian sống của bạn thành tác phẩm nghệ thuật với
-                những sản phẩm trang trí nội thất được tuyển chọn kỹ lưỡng.
-            </p>
-        </div>
-
-        <div>
-            <h4>SẢN PHẨM</h4>
-            <ul>
-                <li>Đèn trang trí</li>
-                <li>Tranh treo tường</li>
-                <li>Bình hoa</li>
-                <li>Đồng hồ</li>
-            </ul>
-        </div>
-
-        <div>
-            <h4>HỖ TRỢ</h4>
-            <ul>
-                <li>Chính sách mua hàng</li>
-                <li>Đổi trả</li>
-                <li>Bảo mật</li>
-            </ul>
-        </div>
-
-        <div>
-            <h4>LIÊN HỆ</h4>
-            <p>123 Nguyễn Huệ, TP.HCM</p>
-            <p>0901 234 567</p>
-            <p>hello@homedecor.vn</p>
-        </div>
-
-    </div>
-
-</footer>
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>
