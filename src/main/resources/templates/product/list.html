@@ -1,10 +1,119 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Tất cả sản phẩm - HOME DECOR</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+    <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
+
+<div th:replace="~{fragments/header :: header}"></div>
+
+<main class="shop-container">
+    <p class="breadcrumb">Trang chủ / <span class="active">Tất cả sản phẩm</span></p>
+
+    <h2 class="page-title">Tất cả sản phẩm</h2>
+    <p class="product-count">Tìm thấy <span th:text="${totalElements}">0</span> sản phẩm</p>
+
+    <div class="shop-layout">
+        <aside class="sidebar">
+
+            <div class="filter-group">
+                <h4>TÌM KIẾM</h4>
+                <form th:action="@{/product}" method="GET" class="search-box">
+                    <input type="hidden" name="categoryId" th:value="${categoryId}">
+                    <input type="hidden" name="sortBy" th:value="${sortBy}">
+                    <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm tên sản phẩm...">
+                </form>
+            </div>
+
+            <div class="filter-group">
+                <h4>DANH MỤC</h4>
+                <ul class="category-list">
+                    <li>
+                        <a th:href="@{/product(keyword=${keyword}, sortBy=${sortBy})}"
+                           th:classappend="${categoryId == null} ? 'active' : ''">Tất cả</a>
+                    </li>
+                    <li th:each="cate : ${categories}">
+                        <a th:href="@{/product(categoryId=${cate.id}, keyword=${keyword}, sortBy=${sortBy})}"
+                           th:text="${cate.name}"
+                           th:classappend="${categoryId == cate.id} ? 'active' : ''">Tên danh mục</a>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="filter-group">
+                <h4>SẮP XẾP THEO GIÁ</h4>
+                <ul class="sort-list">
+                    <li>
+                        <a th:href="@{/product(sortBy='', keyword=${keyword}, categoryId=${categoryId})}"
+                           th:classappend="${sortBy == null || sortBy == ''} ? 'active' : ''">Mặc định</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/product(sortBy='priceAsc', keyword=${keyword}, categoryId=${categoryId})}"
+                           th:classappend="${sortBy == 'priceAsc'} ? 'active' : ''">Giá tăng dần</a>
+                    </li>
+                    <li>
+                        <a th:href="@{/product(sortBy='priceDesc', keyword=${keyword}, categoryId=${categoryId})}"
+                           th:classappend="${sortBy == 'priceDesc'} ? 'active' : ''">Giá giảm dần</a>
+                    </li>
+                </ul>
+            </div>
+        </aside>
+
+        <section class="products-section">
+            <div class="product-grid">
+
+                <div class="product-card" th:each="product : ${products}">
+                    <div class="product-image-wrapper">
+                        <img th:src="${product.imageUrl != null} ? @{${product.imageUrl}} : @{/images/default-product.jpg}" alt="Product Image">
+                        <div class="hover-icons">
+                            <button class="icon-btn"><i class="fa-regular fa-heart"></i></button>
+                        </div>
+                    </div>
+                    <div class="product-info">
+                        <span class="product-cate" th:text="${product.category?.name}">DANH MỤC</span>
+
+                        <a th:href="@{'/product/' + ${product.id}}" style="text-decoration: none;">
+                            <h3 class="product-name" th:text="${product.name}">Tên sản phẩm</h3>
+                        </a>
+
+                        <div class="product-footer">
+                            <span class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">0 đ</span>
+
+                            <form th:action="@{/cart/add}" method="POST" style="margin: 0;">
+                                <input type="hidden" name="productId" th:value="${product.id}">
+                                <input type="hidden" name="quantity" value="1">
+
+                                <button type="submit" class="btn-add-cart">
+                                    <i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ
+                                </button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pagination" th:if="${totalPages > 1}">
+                <a th:href="@{/product(page=${currentPage - 1}, keyword=${keyword}, categoryId=${categoryId}, sortBy=${sortBy})}"
+                   th:classappend="${currentPage == 0} ? 'disabled' : ''" class="page-btn">&lt; Trước</a>
+
+                <a th:each="i : ${#numbers.sequence(0, totalPages - 1)}"
+                   th:href="@{/product(page=${i}, keyword=${keyword}, categoryId=${categoryId}, sortBy=${sortBy})}"
+                   th:text="${i + 1}"
+                   th:classappend="${currentPage == i} ? 'active' : ''" class="page-number">1</a>
+
+                <a th:href="@{/product(page=${currentPage + 1}, keyword=${keyword}, categoryId=${categoryId}, sortBy=${sortBy})}"
+                   th:classappend="${currentPage == totalPages - 1} ? 'disabled' : ''" class="page-btn">Tiếp &gt;</a>
+            </div>
+        </section>
+    </div>
+</main>
+
+<div th:replace="~{fragments/footer :: footer}"></div>
 
 </body>
 </html>

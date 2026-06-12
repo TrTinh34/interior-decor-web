@@ -31,3 +31,25 @@ document.addEventListener("DOMContentLoaded", function () {
         });
     });
 });
+
+    document.addEventListener('DOMContentLoaded', function () {
+    const alertElement = document.getElementById('errorMsg');
+
+    if (alertElement) {
+    setTimeout(() => {
+    const bsAlert = bootstrap.Alert.getOrCreateInstance(alertElement);
+    bsAlert.close();
+}, 5000);
+}
+});
+
+document.addEventListener('DOMContentLoaded', function () {
+    const alertElement = document.getElementById('successMsg');
+
+    if (alertElement) {
+        setTimeout(() => {
+            const bsAlert = bootstrap.Alert.getOrCreateInstance(alertElement);
+            bsAlert.close();
+        }, 5000);
+    }
+});

@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/products")
+@RequestMapping("/product") // 🎯 Đã cập nhật thành /product đúng yêu cầu của bạn
 public class ProductController {
 
     @Autowired private ProductService productService;
@@ -27,16 +27,22 @@ public class ProductController {
                        @RequestParam(defaultValue = "0") int page,
                        Model model) {
 
+        // Lấy dữ liệu phân trang từ Service (Mỗi trang gồm n sản phẩm tùy cấu hình Service của bạn)
         Page<Product> productPage = productService
                 .getProducts(keyword, categoryId, sortBy, page);
 
+        // Đẩy dữ liệu ra tầng giao diện Thymeleaf
         model.addAttribute("products", productPage.getContent());
         model.addAttribute("totalPages", productPage.getTotalPages());
+        model.addAttribute("totalElements", productPage.getTotalElements()); // Đếm tổng số sản phẩm tìm thấy
         model.addAttribute("currentPage", page);
-        model.addAttribute("categories", categoryRepository.findAll());
+        model.addAttribute("categories", categoryRepository.findAll()); // Danh sách danh mục cho sidebar
+
+        // Giữ lại trạng thái các bộ lọc để hiển thị class active hoặc dùng cho phân trang
         model.addAttribute("keyword", keyword);
         model.addAttribute("categoryId", categoryId);
         model.addAttribute("sortBy", sortBy);
+
         return "product/list";
     }
 

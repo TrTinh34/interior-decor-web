@@ -78,9 +78,17 @@
                         <h3 class="product-name" th:text="${product.name}">Tên sản phẩm Decor</h3>
                         <div class="product-meta">
                             <span class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
-                            <button class="btn-add-cart" title="Thêm vào giỏ hàng">
-                                <i class="fa-solid fa-basket-shopping"></i>
-                            </button>
+
+                            <form th:action="@{/cart/add}" method="POST" style="margin: 0;">
+                                <input type="hidden" name="productId" th:value="${product.id}">
+                                <input type="hidden" name="quantity" value="1">
+
+                                <button class="btn-add-cart" title="Thêm vào giỏ hàng">
+                                    <i class="fa-solid fa-basket-shopping"></i>
+                                </button>
+                            </form>
+
+
                         </div>
                     </div>
                 </div>
@@ -147,9 +155,18 @@
                     <div class="product-info">
                         <p class="product-cat" th:text="${product.category != null ? product.category.name : 'Chưa phân loại'}">Danh mục</p>
                         <h3 class="product-name" th:text="${product.name}">Sản phẩm nội thất</h3>
+
                         <div class="product-meta">
                             <span class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
-                            <button class="btn-add-cart"><i class="fa-solid fa-basket-shopping"></i></button>
+
+                            <form th:action="@{/cart/add}" method="POST" style="margin: 0;">
+                                <input type="hidden" name="productId" th:value="${product.id}">
+                                <input type="hidden" name="quantity" value="1">
+
+                                <button type="submit" class="btn-add-cart" title="Thêm vào giỏ hàng">
+                                    <i class="fa-solid fa-basket-shopping"></i>
+                                </button>
+                            </form>
                         </div>
                     </div>
                 </div>

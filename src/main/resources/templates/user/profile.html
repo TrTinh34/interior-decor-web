@@ -4,10 +4,16 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Tài khoản của tôi</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" th:href="@{/css/app.css}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css"
+          rel="stylesheet">
 
+    <link rel="stylesheet"
+          href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <link rel="stylesheet"
+          th:href="@{/css/app.css}">
 </head>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
 <body>
 <header class="header" th:fragment="header">
     <div class="container navbar">
@@ -122,8 +128,32 @@
                         <p class="tab-desc">Cập nhật thông tin chi tiết và hồ sơ mua sắm của bạn.</p>
                     </div>
 
-                    <div th:if="${successMsg}" class="alert-message alert-success" th:text="${successMsg}"></div>
-                    <div th:if="${errorMsg}" class="alert-message alert-danger" th:text="${errorMsg}"></div>
+<!--                    <div th:if="${successMsg}" class="alert-message alert-success" th:text="${successMsg}"></div>-->
+<!--                    <div th:if="${errorMsg}" class="alert-message alert-danger" th:text="${errorMsg}"></div><br>-->
+
+                    <div id="errorMsg"
+                         th:if="${errorMsg}"
+                         class="alert alert-danger alert-dismissible fade show"
+                         role="alert">
+                        <span th:text="${errorMsg}"></span>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                    </div>
+
+                    <div id="successMsg"
+                         th:if="${successMsg}"
+                         class="alert alert-success alert-dismissible fade show"
+                         role="alert">
+                        <span th:text="${successMsg}"></span>
+                        <button type="button"
+                                class="btn-close"
+                                data-bs-dismiss="alert"
+                                aria-label="Close"></button>
+                    </div><br>
+
+
 
                     <div class="avatar-section">
                         <div class="avatar-circle">
@@ -248,5 +278,6 @@
 </main>
 <div th:replace="~{/fragments/footer :: footer}"></div>
 <script th:src="@{/js/profile.js}"></script>
+
 </body>
 </html>

@@ -27,7 +27,7 @@ public class CartController {
                           @RequestParam(defaultValue = "1") Integer quantity,
                           Authentication auth) {
         cartService.addItem(auth.getName(), productId, quantity);
-        return "redirect:/cart";
+        return "redirect:/product";
     }
 
     @PostMapping("/update/{itemId}")

@@ -31,6 +31,14 @@ public class UserController {
     @GetMapping("/profile")
     public String showProfilePage(@AuthenticationPrincipal UserDetails userDetails, Model model) {
         if (userDetails == null) {
+
+
+
+
+
+
+
+
             return "redirect:/login";
         }
 
@@ -54,6 +62,7 @@ public class UserController {
                                 @RequestParam("address") String address,
                                 RedirectAttributes redirectAttributes) {
         if (userDetails == null) {
+            redirectAttributes.addFlashAttribute("errorMsg", "Có lỗi xảy ra, vui lòng thử lại.");
             return "redirect:/login";
         }
 
