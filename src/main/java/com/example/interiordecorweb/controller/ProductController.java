@@ -48,7 +48,21 @@ public class ProductController {
 
     @GetMapping("/{id}")
     public String detail(@PathVariable Integer id, Model model) {
-        model.addAttribute("product", productService.findById(id));
+        Product product = productService.findById(id);
+        model.addAttribute("product", product);
+
+        // Lấy thêm danh sách sản phẩm liên quan (Cùng CategoryId, giới hạn 4 sản phẩm để vừa khít màn hình)
+        // Bạn có thể viết thêm 1 hàm đơn giản trong ProductService hoặc dùng tạm ProductRepository trực tiếp ở đây tùy cấu hình
+        org.springframework.data.domain.Page<Product> relatedPage = productService
+                .getProducts("", product.getCategory().getId(), "", 0); // Lấy trang đầu tiên của danh mục đó
+
+        // Loại bỏ chính sản phẩm hiện tại ra khỏi danh sách gợi ý
+        java.util.List<Product> relatedProducts = relatedPage.getContent().stream()
+                .filter(p -> !p.getId().equals(id))
+                .limit(4)
+                .collect(java.util.stream.Collectors.toList());
+
+        model.addAttribute("relatedProducts", relatedProducts);
         return "product/detail";
     }
 }

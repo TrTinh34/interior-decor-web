@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <title>Tất cả sản phẩm - HOME DECOR</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
-
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
 <body>
@@ -64,15 +63,19 @@
         </aside>
 
         <section class="products-section">
-            <div class="product-grid">
 
+            <div class="product-grid" th:if="${not #lists.isEmpty(products)}">
                 <div class="product-card" th:each="product : ${products}">
-                    <div class="product-image-wrapper">
-                        <img th:src="${product.imageUrl != null} ? @{${product.imageUrl}} : @{/images/default-product.jpg}" alt="Product Image">
-                        <div class="hover-icons">
-                            <button class="icon-btn"><i class="fa-regular fa-heart"></i></button>
+
+                    <a th:href="@{'/product/' + ${product.id}}" class="product-card-link">
+                        <div class="product-image-wrapper">
+                            <img th:src="${product.imageUrl != null} ? @{${product.imageUrl}} : @{/images/default-product.jpg}" alt="Product Image">
+                            <div class="hover-icons">
+                                <button class="icon-btn" type="button"><i class="fa-regular fa-heart"></i></button>
+                            </div>
                         </div>
-                    </div>
+                    </a>
+
                     <div class="product-info">
                         <span class="product-cate" th:text="${product.category?.name}">DANH MỤC</span>
 
@@ -86,7 +89,6 @@
                             <form th:action="@{/cart/add}" method="POST" style="margin: 0;">
                                 <input type="hidden" name="productId" th:value="${product.id}">
                                 <input type="hidden" name="quantity" value="1">
-
                                 <button type="submit" class="btn-add-cart">
                                     <i class="fa-solid fa-cart-shopping"></i> Thêm vào giỏ
                                 </button>
@@ -94,7 +96,15 @@
                         </div>
                     </div>
                 </div>
+            </div>
 
+            <div class="no-products-box" th:unless="${not #lists.isEmpty(products)}">
+                <div class="no-products-content">
+                    <i class="fa-solid fa-magnifying-glass-minus no-products-icon"></i>
+                    <h3>Không tìm thấy sản phẩm nào!</h3>
+                    <p>Rất tiếc, chúng tôi không tìm thấy sản phẩm phù hợp với lựa chọn hoặc từ khóa "<b><span th:text="${keyword}"></span></b>" của bạn.</p>
+                    <a th:href="@{/product}" class="btn-reset-search">Xem tất cả sản phẩm</a>
+                </div>
             </div>
 
             <div class="pagination" th:if="${totalPages > 1}">

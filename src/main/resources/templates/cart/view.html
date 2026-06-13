@@ -6,16 +6,16 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" th:href="@{/css/app.css}">
 </head>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+<script th:src="@{/js/cart.js}"></script>
 <body>
 
 <div th:replace="~{fragments/header :: header}"></div>
 
 <main class="cart-container">
-    <a th:href="@{/product}" style="text-decoration: none; color: #666; font-size: 14px; display: inline-flex; align-items: center; gap: 8px; margin-bottom: 20px;">
-        <i class="fa-solid fa-arrow-left"></i> Tiếp tục mua hàng
-    </a>
 
-    <h2 class="cart-title">Giỏ hàng (<span th:text="${cart != null and cart.cartItems != null} ? ${cart.cartItems.size()} : 0">0</span> sản phẩm)</h2>
+
+
 
     <div th:if="${cart == null or #lists.isEmpty(cart.cartItems)}" style="text-align: center; padding: 60px 20px; background: #fff; border-radius: 8px;">
         <i class="fa-solid fa-basket-shopping" style="font-size: 48px; color: #ccc; margin-bottom: 15px;"></i>
@@ -98,39 +98,6 @@
 
 <div th:replace="~{fragments/footer :: footer}"></div>
 
-<script th:inline="javascript">
-    function changeQuantity(itemId, newQuantity) {
-        // Nếu người dùng giảm số lượng về 0, kích hoạt hàm xóa luôn
-        if (newQuantity <= 0) {
-            removeItem(itemId);
-            return;
-        }
 
-        // Tạo FormData gửi lên khớp với cơ chế @RequestParam của Controller bạn viết
-        const formData = new FormData();
-        formData.append('quantity', newQuantity);
-
-        fetch(`/cart/update/${itemId}`, {
-            method: 'POST',
-            body: formData
-        }).then(response => {
-            if (response.ok) {
-                window.location.reload();
-            }
-        });
-    }
-
-    function removeItem(itemId) {
-        if (confirm("Bạn có chắc chắn muốn xóa sản phẩm này khỏi giỏ hàng?")) {
-            fetch(`/cart/remove/${itemId}`, {
-                method: 'POST'
-            }).then(response => {
-                if (response.ok) {
-                    window.location.reload();
-                }
-            });
-        }
-    }
-</script>
 </body>
 </html>

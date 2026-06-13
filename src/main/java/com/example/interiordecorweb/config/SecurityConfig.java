@@ -38,7 +38,7 @@ public class SecurityConfig {
                         .requestMatchers("/profile", "/profile/**").authenticated()
 
                         // 3. Các tài nguyên tĩnh và trang công khai không cần đăng nhập
-                        .requestMatchers("/", "/products/**", "/register", "/login",
+                        .requestMatchers("/", "/product/**", "/register", "/login",
                                 "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
 
                         // 4. Các request còn lại phải xác thực

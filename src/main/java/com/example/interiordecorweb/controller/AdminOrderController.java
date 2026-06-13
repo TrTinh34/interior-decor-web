@@ -21,13 +21,17 @@ public class AdminOrderController {
     @GetMapping
     public String list(Model model) {
         model.addAttribute("orders", orderService.getAllOrders());
-        return "admin/order/list";
+        return "admin/orders";
     }
 
-    @PostMapping("/update-status/{id}")
-    public String updateStatus(@PathVariable Integer id,
-                               @RequestParam String status) {
-        orderService.updateStatus(id, status);
+    @PostMapping("/update-status")
+    public String updateStatus(@RequestParam("orderId") Integer orderId,
+                               @RequestParam("status") String status) {
+
+        // 1. Thực thi lưu database thông qua service
+        orderService.updateStatus(orderId, status);
+
+        // 2. Chuyển hướng trình duyệt quay về trang danh sách (Tránh lỗi lưu lặp dữ liệu)
         return "redirect:/admin/orders";
     }
 }

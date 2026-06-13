@@ -26,10 +26,10 @@
                 Khám phá bộ sưu tập đồ trang trí nội thất được tuyển chọn kỹ lưỡng theo phong cách Bắc Âu hiện đại.
             </p>
             <div class="hero-btn-group">
-                <a th:href="@{/products}" class="btn-primary-custom">
+                <a th:href="@{/product}" class="btn-primary-custom">
                     Khám phá ngay <i class="fa-solid fa-arrow-right"></i>
                 </a>
-                <a th:href="@{/categories}" class="btn-outline-white">Xem danh mục</a>
+                <a th:href="@{/product}" class="btn-outline-white">Xem danh mục</a>
             </div>
         </div>
     </section>
@@ -40,13 +40,13 @@
                 <p class="section-subtitle">Khám phá theo</p>
                 <h2 class="section-title">Danh mục nổi bật</h2>
             </div>
-            <a th:href="@{/categories}" class="view-all-link">
+            <a th:href="@{/product}" class="view-all-link">
                 Xem tất cả <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i>
             </a>
         </div>
 
         <div class="category-grid">
-            <div th:each="cat : ${categories}" class="category-card" th:onclick="|window.location.href='@{/products(category=${cat.id})}'|">
+            <div th:each="cat : ${categories}" class="category-card" th:onclick="|window.location.href='@{/product(categoryId=${cat.id})}'|">
                 <img th:src="${cat.imageUrl}" th:alt="${cat.name}">
                 <div class="category-overlay"></div>
                 <p class="category-name" th:text="${cat.name}">Tên danh mục</p>
@@ -61,34 +61,37 @@
                     <p class="section-subtitle">Được yêu thích</p>
                     <h2 class="section-title">Sản phẩm nổi bật</h2>
                 </div>
-                <a th:href="@{/products}" class="view-all-link">
+                <a th:href="@{/product}" class="view-all-link">
                     Xem tất cả <i class="fa-solid fa-arrow-right" style="font-size: 12px;"></i>
                 </a>
             </div>
 
             <div class="products-grid">
                 <div th:each="product : ${featuredProducts}" class="product-item">
-                    <div class="product-img-wrap">
-                        <a th:href="@{/product/detail/{id}(id=${product.id})}">
+
+                    <a th:href="@{'/product/' + ${product.id}}" class="product-card-link">
+                        <div class="product-img-wrap">
                             <img th:src="${product.imageUrl}" th:alt="${product.name}">
-                        </a>
-                    </div>
+                        </div>
+                    </a>
+
                     <div class="product-info">
                         <p class="product-cat" th:text="${product.category != null ? product.category.name : 'Chưa phân loại'}">Danh mục</p>
-                        <h3 class="product-name" th:text="${product.name}">Tên sản phẩm Decor</h3>
+
+                        <a th:href="@{'/product/' + ${product.id}}" style="text-decoration: none;">
+                            <h3 class="product-name" th:text="${product.name}">Tên sản phẩm Decor</h3>
+                        </a>
+
                         <div class="product-meta">
                             <span class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
 
                             <form th:action="@{/cart/add}" method="POST" style="margin: 0;">
                                 <input type="hidden" name="productId" th:value="${product.id}">
                                 <input type="hidden" name="quantity" value="1">
-
-                                <button class="btn-add-cart" title="Thêm vào giỏ hàng">
+                                <button type="submit" class="btn-add-cart" title="Thêm vào giỏ hàng">
                                     <i class="fa-solid fa-basket-shopping"></i>
                                 </button>
                             </form>
-
-
                         </div>
                     </div>
                 </div>
@@ -131,7 +134,7 @@
                     </div>
                 </div>
 
-                <a th:href="@{/products}" class="btn-primary-custom" style="margin-top: 8px;">
+                <a th:href="@{/product}" class="btn-primary-custom" style="margin-top: 8px;">
                     Khám phá bộ sưu tập <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>
@@ -147,14 +150,19 @@
 
             <div class="products-grid">
                 <div th:each="product : ${allProducts}" class="product-item">
-                    <div class="product-img-wrap">
-                        <a th:href="@{/product/detail/{id}(id=${product.id})}">
+
+                    <a th:href="@{'/product/' + ${product.id}}" class="product-card-link">
+                        <div class="product-img-wrap">
                             <img th:src="${product.imageUrl}" th:alt="${product.name}">
-                        </a>
-                    </div>
+                        </div>
+                    </a>
+
                     <div class="product-info">
                         <p class="product-cat" th:text="${product.category != null ? product.category.name : 'Chưa phân loại'}">Danh mục</p>
-                        <h3 class="product-name" th:text="${product.name}">Sản phẩm nội thất</h3>
+
+                        <a th:href="@{'/product/' + ${product.id}}" style="text-decoration: none;">
+                            <h3 class="product-name" th:text="${product.name}">Sản phẩm nội thất</h3>
+                        </a>
 
                         <div class="product-meta">
                             <span class="product-price" th:text="${#numbers.formatDecimal(product.price, 0, 'COMMA', 0, 'POINT')} + ' ₫'">0 ₫</span>
@@ -162,7 +170,6 @@
                             <form th:action="@{/cart/add}" method="POST" style="margin: 0;">
                                 <input type="hidden" name="productId" th:value="${product.id}">
                                 <input type="hidden" name="quantity" value="1">
-
                                 <button type="submit" class="btn-add-cart" title="Thêm vào giỏ hàng">
                                     <i class="fa-solid fa-basket-shopping"></i>
                                 </button>
@@ -173,7 +180,7 @@
             </div>
 
             <div style="text-align: center; margin-top: 48px;">
-                <a th:href="@{/products}" class="btn-outline-custom">
+                <a th:href="@{/product}" class="btn-outline-custom">
                     Xem tất cả sản phẩm <i class="fa-solid fa-arrow-right"></i>
                 </a>
             </div>

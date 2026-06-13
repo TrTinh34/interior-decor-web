@@ -1,10 +1,101 @@
 <!DOCTYPE html>
-<html lang="en">
+<html xmlns:th="http://www.thymeleaf.org">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>Quản lý sản phẩm - HOME DECOR</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
-<body>
+<body class="bg-gray-50 font-sans">
+<div class="flex h-screen">
 
+    <aside class="w-64 bg-slate-800 text-white p-6 space-y-6 flex-shrink-0">
+        <h2 class="text-xl font-bold tracking-wider">HOME DECOR</h2>
+        <nav class="space-y-2">
+            <a th:href="@{/admin/dashboard}" class="block px-4 py-2.5 rounded text-gray-300 hover:bg-slate-700 hover:text-white transition">Doanh Thu & Thống Kê</a>
+            <a th:href="@{/admin/products}" class="block px-4 py-2.5 rounded bg-blue-600 text-white font-medium">Quản lý sản phẩm</a>
+            <a th:href="@{/admin/orders}" class="block px-4 py-2.5 rounded text-gray-300 hover:bg-slate-700 hover:text-white transition">Quản lý đơn hàng</a>
+            <a th:href="@{/logout}" class="block px-4 py-2.5 rounded text-gray-400 hover:text-white border-t border-slate-700 mt-6 pt-4">Đăng xuất</a>
+        </nav>
+    </aside>
+
+    <main class="flex-1 p-10 overflow-y-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-2xl font-bold text-gray-800">Danh sách Sản Phẩm</h1>
+            <a th:href="@{/admin/products/create}" class="bg-emerald-600 hover:bg-emerald-700 text-white text-sm font-medium px-4 py-2.5 rounded-lg transition inline-flex items-center gap-2 shadow-sm">
+                <i class="fa-solid fa-plus"></i> Thêm sản phẩm mới
+            </a>
+        </div>
+
+        <div class="bg-white rounded-xl border shadow-sm overflow-hidden">
+            <table class="w-full text-left border-collapse">
+                <thead>
+                <tr class="bg-gray-100 text-gray-700 text-xs font-semibold uppercase tracking-wider border-b">
+                    <th class="px-6 py-4 w-20">Hình ảnh</th>
+                    <th class="px-6 py-4">Tên sản phẩm</th>
+                    <th class="px-6 py-4">Danh mục</th>
+                    <th class="px-6 py-4">Giá bán</th>
+                    <th class="px-6 py-4 text-center">Tồn kho</th>
+                    <th class="px-6 py-4 text-center">Hành động</th>
+                </tr>
+                </thead>
+                <tbody class="text-sm divide-y">
+                <tr th:each="product : ${products}" class="hover:bg-gray-50 transition">
+                    <td class="px-6 py-3">
+                        <img th:src="${product.imageUrl != null ? product.imageUrl : '/images/default-product.png'}"
+                             alt="Product Image" class="w-12 h-12 object-cover rounded-md border bg-gray-50">
+                    </td>
+                    <td class="px-6 py-4">
+                        <div class="font-semibold text-gray-800" th:text="${product.name}">Tên sản phẩm</div>
+                        <div class="text-xs text-gray-400 mt-0.5" th:text="'ID: #' + ${product.id}">#1</div>
+                    </td>
+                    <td class="px-6 py-4 text-gray-600" th:text="${product.category.name}">Danh mục</td>
+                    <td class="px-6 py-4 font-medium text-gray-900"
+                        th:text="${#numbers.formatDecimal(product.price, 0, 'POINT', 0, 'COMMA')} + ' đ'">0 đ</td>
+                    <td class="px-6 py-4 text-center">
+                                <span th:text="${product.stock}"
+                                      th:class="${product.stock > 0} ? 'text-gray-700' : 'text-red-500 font-bold'">0</span>
+                    </td>
+                    <td class="px-6 py-4 text-center space-x-2">
+                        <a th:href="@{/admin/products/edit/{id}(id=${product.id})}"
+                           class="inline-block bg-amber-50 text-amber-700 border border-amber-200 hover:bg-amber-100 p-2 rounded transition" title="Sửa">
+                            <i class="fa-solid fa-pen-to-square"></i>
+                        </a>
+                        <a th:href="@{/admin/products/delete/{id}(id=${product.id})}"
+                           onclick="return confirm('Bạn có chắc chắn muốn xóa sản phẩm này không (Ẩn khỏi hệ thống)?')"
+                           class="inline-block bg-red-50 text-red-700 border border-red-200 hover:bg-red-100 p-2 rounded transition" title="Xóa">
+                            <i class="fa-solid fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(products)}">
+                    <td colspan="6" class="px-6 py-10 text-center text-gray-400">Không có sản phẩm nào trong hệ thống.</td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="flex justify-end items-center mt-6 space-x-2" th:if="${productPage != null && productPage.totalPages > 1}">
+
+            <a th:href="@{/admin/products(page=${productPage.number - 1})}"
+               th:classappend="${!productPage.hasPrevious()} ? 'pointer-events-none opacity-50 bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'"
+               class="px-3 py-1.5 text-xs font-medium rounded border transition">
+                Trước
+            </a>
+
+            <span class="text-xs text-gray-500 font-medium px-2"
+                  th:text="'Trang ' + (${productPage.number + 1}) + ' / ' + ${productPage.totalPages}">
+                Trang 1 / 1
+            </span>
+
+            <a th:href="@{/admin/products(page=${productPage.number + 1})}"
+               th:classappend="${!productPage.hasNext()} ? 'pointer-events-none opacity-50 bg-gray-100 text-gray-400' : 'bg-white text-gray-700 hover:bg-gray-50'"
+               class="px-3 py-1.5 text-xs font-medium rounded border transition">
+                Sau
+            </a>
+
+        </div>
+    </main>
+</div>
 </body>
 </html>
