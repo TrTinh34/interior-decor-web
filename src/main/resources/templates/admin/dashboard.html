@@ -14,7 +14,7 @@
             <a th:href="@{/admin/dashboard}" class="block px-4 py-2.5 rounded bg-blue-600 text-white font-medium">Doanh Thu & Thống Kê</a>
             <a th:href="@{/admin/products}" class="block px-4 py-2.5 rounded text-gray-300 hover:bg-slate-700 hover:text-white transition">Quản lý sản phẩm</a>
             <a th:href="@{/admin/orders}" class="block px-4 py-2.5 rounded text-gray-300 hover:bg-slate-700 hover:text-white transition">Quản lý đơn hàng</a>
-            <a th:href="@{logout/}" class="block px-4 py-2.5 rounded text-gray-400 hover:text-white border-t border-slate-700 mt-6 pt-4">Đăng xuất</a>
+            <a th:href="@{/logout}" class="block px-4 py-2.5 rounded text-gray-400 hover:text-white border-t border-slate-700 mt-6 pt-4">Đăng xuất</a>
         </nav>
     </aside>
 
@@ -45,7 +45,7 @@
         </div>
 
         <div class="bg-white p-8 rounded-xl border shadow-sm">
-            <h4 class="text-md font-bold text-gray-700 mb-6">Biểu đồ doanh thu 7 ngày qua (Tính ngược từ ngày được chọn)</h4>
+            <h4 class="text-md font-bold text-gray-700 mb-6">Biểu đồ doanh thu 7 ngày qua </h4>
             <div class="relative w-full h-[380px]">
                 <canvas id="revenueChart"></canvas>
             </div>
