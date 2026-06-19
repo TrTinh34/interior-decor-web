@@ -64,8 +64,6 @@ public class SecurityConfig {
     }
 
     @Bean
-
-
     public AuthenticationSuccessHandler customAuthSuccessHandler() {
         return (request, response, authentication) -> {
             // Kiểm tra xem trong danh sách quyền có ai là ADMIN hoặc ROLE_ADMIN không

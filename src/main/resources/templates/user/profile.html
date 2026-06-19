@@ -90,9 +90,6 @@
                         <p class="tab-desc">Cập nhật thông tin chi tiết và hồ sơ mua sắm của bạn.</p>
                     </div>
 
-<!--                    <div th:if="${successMsg}" class="alert-message alert-success" th:text="${successMsg}"></div>-->
-<!--                    <div th:if="${errorMsg}" class="alert-message alert-danger" th:text="${errorMsg}"></div><br>-->
-
                     <div id="errorMsg"
                          th:if="${errorMsg}"
                          class="alert alert-danger alert-dismissible fade show"
@@ -115,15 +112,8 @@
                                 aria-label="Close"></button>
                     </div><br>
 
-
-
                     <div class="avatar-section">
                         <div class="avatar-circle">
-                            <!--
-                                ✅ FIX CHÍNH: Dùng th:with để tạo biến tạm,
-                                kiểm tra null trước khi gọi substring().
-                                Nếu fullName null → hiển thị "?" thay vì crash.
-                            -->
                             <span th:with="name=${currentUser?.fullName}"
                                   th:text="${name != null and !#strings.isEmpty(name)} ? ${#strings.substring(name, 0, 1).toUpperCase()} : '?'">
                                 U
@@ -184,13 +174,13 @@
                 <div id="tab-orders" class="tab-panel">
                     <div class="tab-header">
                         <h2 class="tab-title">Lịch sử đơn hàng</h2>
-                        <p class="tab-desc">Danh sách các đơn hàng bạn đã mua tại hệ thống.</p>
+                        <p class="tab-desc">Danh sách đơn hàng bạn đã mua trên hệ thống.</p>
                     </div>
 
-                    <div class="orders-list">
-                        <div class="no-data-alert" style="text-align: center; padding: 40px; color: #999;">
-                            <i class="fa-solid fa-box-open" style="font-size: 36px; margin-bottom: 12px; opacity: 0.5;"></i>
-                            <p style="font-family: 'Inter', sans-serif; font-size: 14px;">Tính năng đang cập nhật đồng bộ đơn hàng.</p>
+                    <div id="orders-container">
+                        <div style="text-align: center; padding: 40px; color: #9A9488;">
+                            <i class="fas fa-spinner fa-spin" style="font-size: 24px; margin-bottom: 8px;"></i>
+                            <p style="font-family: 'Inter', sans-serif; font-size: 14px;">Đang tải lịch sử mua hàng...</p>
                         </div>
                     </div>
                 </div>
