@@ -30,10 +30,18 @@ public class SecurityConfig {
                 .csrf(csrf -> csrf.disable())
 
                 .authorizeHttpRequests(auth -> auth
+                        // 1. Phân quyền cụ thể theo vai trò (Role)
                         .requestMatchers("/admin/**").hasAuthority("ADMIN")
                         .requestMatchers("/cart/**", "/checkout/**").hasAuthority("CUSTOMER")
-                        .requestMatchers("/", "/products/**", "/register", "/login",
+
+                        // 2. Bảo vệ trang cá nhân (Chấp nhận cả ADMIN lẫn CUSTOMER miễn là đã đăng nhập)
+                        .requestMatchers("/profile", "/profile/**").authenticated()
+
+                        // 3. Các tài nguyên tĩnh và trang công khai không cần đăng nhập
+                        .requestMatchers("/", "/product/**", "/register", "/login",
                                 "/css/**", "/js/**", "/images/**", "/uploads/**").permitAll()
+
+                        // 4. Các request còn lại phải xác thực
                         .anyRequest().authenticated()
                 )
                 .formLogin(form -> form
@@ -58,9 +66,12 @@ public class SecurityConfig {
     @Bean
     public AuthenticationSuccessHandler customAuthSuccessHandler() {
         return (request, response, authentication) -> {
-            String role = authentication.getAuthorities()
-                    .iterator().next().getAuthority();
-            if ("ADMIN".equals(role)) {
+            // Kiểm tra xem trong danh sách quyền có ai là ADMIN hoặc ROLE_ADMIN không
+            boolean isAdmin = authentication.getAuthorities().stream()
+                    .map(grantedAuthority -> grantedAuthority.getAuthority())
+                    .anyMatch(role -> "ADMIN".equals(role) || "ROLE_ADMIN".equals(role));
+
+            if (isAdmin) {
                 response.sendRedirect("/admin/dashboard");
             } else {
                 response.sendRedirect("/");

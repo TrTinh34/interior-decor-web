@@ -17,6 +17,7 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption; // Thêm import phục vụ ghi đè file an toàn
 import java.util.UUID;
 
 @Service
@@ -29,11 +30,15 @@ public class ProductService {
     @Value("${app.upload.dir}")
     private String uploadDir;
 
+    public java.util.List<Product> getAllActiveProductsList() {
+        return productRepository.findAll();
+    }
+
     public Page<Product> getProducts(String keyword, Integer categoryId,
                                      String sortBy, int page) {
-        Sort sort = "price_asc".equals(sortBy)
+        Sort sort = "priceAsc".equals(sortBy)
                 ? Sort.by("price").ascending()
-                : "price_desc".equals(sortBy)
+                : "priceDesc".equals(sortBy)
                   ? Sort.by("price").descending()
                   : Sort.by("createdAt").descending();
 
@@ -63,6 +68,11 @@ public class ProductService {
                 ? productRepository.findById(dto.getId()).orElse(new Product())
                 : new Product();
 
+        // Đảm bảo các sản phẩm mới thêm mặc định sẽ ở trạng thái Active = true
+        if (dto.getId() == null) {
+            product.setIsActive(true);
+        }
+
         product.setName(dto.getName());
         product.setDescription(dto.getDescription());
         product.setPrice(dto.getPrice());
@@ -71,14 +81,31 @@ public class ProductService {
         product.setColor(dto.getColor());
         product.setDimensions(dto.getDimensions());
         product.setCategory(categoryRepository.findById(dto.getCategoryId())
-                .orElseThrow());
+                .orElseThrow(() -> new RuntimeException("Danh mục không tồn tại")));
 
+        // XỬ LÝ LƯU FILE HÌNH ẢNH AN TOÀN TUYỆT ĐỐI
         if (dto.getImageFile() != null && !dto.getImageFile().isEmpty()) {
             String filename = UUID.randomUUID() + "_" + dto.getImageFile().getOriginalFilename();
             Path uploadPath = Paths.get(uploadDir);
-            Files.createDirectories(uploadPath);
-            dto.getImageFile().transferTo(uploadPath.resolve(filename).toFile());
+
+            // Tự động kiểm tra và khởi tạo thư mục lưu trữ nếu chưa có sẵn
+            if (!Files.exists(uploadPath)) {
+                Files.createDirectories(uploadPath);
+            }
+
+            Path targetPath = uploadPath.resolve(filename);
+
+            // Sử dụng luồng InputStream kết hợp Files.copy để ép ghi dữ liệu dứt khoát
+            Files.copy(dto.getImageFile().getInputStream(), targetPath, StandardCopyOption.REPLACE_EXISTING);
+
+            // Gán đường dẫn lưu trữ mới
             product.setImageUrl("/uploads/" + filename);
+        } else if (dto.getId() != null) {
+            // Trường hợp chỉnh sửa (Edit) và không tải ảnh mới: giữ nguyên ảnh cũ đã có trong DB
+            Product oldProduct = productRepository.findById(dto.getId()).orElse(null);
+            if (oldProduct != null) {
+                product.setImageUrl(oldProduct.getImageUrl());
+            }
         }
 
         productRepository.save(product);
